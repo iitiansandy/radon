@@ -1,29 +1,30 @@
 const express = require('express');
-const externalModule = require('./logger')
 
+// const externalModule = require('./routes/logger.js')
 const router = express.Router();
 
+const externalModule = require('../logger/logger')
+const myHelper = require('../util/helper')
+const myFormatter = require('../validator/formatter')
+
+
 router.get('/test-me', function (req, res) {
-    console.log('The constant in logger route has a value '+externalModule.endpoint)
-    console.log('The current batch is '+externalModule.batch)
-    externalModule.log()
-    res.send('My first ever api!')
-});
+    myFormatter.trim()
+    myFormatter.changeToLowerCase()
+    myFormatter.changeToUpperCase()
+    // const externalModule = require()
+    // console.log('The constant in logger route has a value '+externalModule.endpoint)
+    // console.log('The current batch is '+externalModule.batch)
+    // externalModule.log()
+    
+    // myHelper.printDate()
+    // myHelper.printMonth()
+    // myHelper.getBatchInfo()
+    res.send('My first ever api! ')
 
-router.get('/test-me1', function (req, res) {
-    res.send('My second ever api!')
-});
+    // res.send('Today Date ' + externalModule.printDate()+ " , " + externalModule.printMonth())
 
-router.get('/test-me2', function (req, res) {
-    res.send('My third api!')
-});
 
-router.get('/test-me3', function (req, res) {
-    res.send('My 4th api!')
-});
-
-router.get('/test-me4', function (req, res) {
-    res.send('My last api!')
 });
 
 module.exports = router;
