@@ -42,8 +42,19 @@ const addNewfield=async function (req, res) {
  let updatebook=await bookModel.find()
  res.send({data: updatebook})
 }
+const getRating =async function( req,res){
+    let data=req.body
+    RatedBook=await bookModel.updateMany(       
+        {rating:{$gt:3.5}},
+                              {$inc:{price:10}},
+                      
+                             {new:true}),{$set:data},{upsert:true}
+                            
+    res.send({data: RatedBook})
+}
 
 module.exports.createBook= createBook
 module.exports.getBookswithAllDetails= getBookswithAllDetails
 module.exports.getBooksWithAuthorDetailsandPublish = getBooksWithAuthorDetailsandPublish
 module.exports.addNewfield= addNewfield
+module.exports.getRating= getRating
