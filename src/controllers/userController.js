@@ -1,6 +1,34 @@
 const UserModel= require("../models/userModel")
 
 
+// Ques-2: Write a POST api to create a user that takes user details from the request body. If the header isFreeAppUser is not present terminate the request response cycle with an error message that the request is missing a mandatory header
+
+const checkUser = async function (req, res, next){
+    let check = req.headers.isFreeAppUser
+    console.log(check)
+    if(!check) res.send({msg: "request is missing a mandatory header"})
+    else next()
+}
+
+
+const createUser= async function (req, res) {
+    let data = req.body
+    // let data= req.header.isFreeAppUser
+    // console.log(data)
+    let savedData= await UserModel.create(data)
+    res.send({msg: savedData})
+    // let tokenDataInHeaders= req.headers.token
+    // console.log(tokenDataInHeaders)
+    
+}
+
+
+
+
+
+
+
+
 
 
 const basicCode= async function(req, res, next) {
@@ -13,29 +41,6 @@ const basicCode= async function(req, res, next) {
     next()
     }
 
-const createUser= async function (req, res) {
-    
-    let data= req.body
-    let tokenDataInHeaders= req.headers.token
-    //Get all headers from request
-    console.log("Request headers before modificatiom",req.headers)
-    //Get a header from request
-    console.log(req.headers.batch)
-    console.log(req.headers["content-type"])
-    console.log(tokenDataInHeaders)
-    //Set a header in request
-    req.headers['month']='June' //req.headers.month = "June"
-
-    //Set an attribute in request object
-    req.anything = "everything"
-    
-    
-    console.log("Request headers after modificatiom",req.headers)
-    
-    //Set a header in response
-    res.header('year','2022')
-    res.send({msg: "Hi"})
-}
 
 const getUsersData= async function (req, res) {
     let allUsers= await UserModel.find()
@@ -45,3 +50,4 @@ const getUsersData= async function (req, res) {
 module.exports.createUser= createUser
 module.exports.getUsersData= getUsersData
 module.exports.basicCode= basicCode
+module.exports.checkUser = checkUser
