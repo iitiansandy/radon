@@ -15,7 +15,7 @@ router.get("/getAuthorsData", authorController.getAuthorsData)
 
 router.post("/createBook", bookController.createBook  )
 router.post("/createPublisher", publishController.createPublisher  )
-router.put("/addNewfield", bookController.addNewfield  )
+router.get("/addNewfield", bookController.addNewfield  )
 
 router.put("/getRating", bookController.getRating  )
 

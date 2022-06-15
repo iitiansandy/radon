@@ -39,18 +39,19 @@ const getBookswithAllDetails= async function (req, res) {
     res.send({data: books})
 }
 const addNewfield=async function (req, res) {
- let updatebook=await bookModel.find()
+ let updatebook=await bookModel.findById("62a1dc244a93b1509b45c9bf")
  res.send({data: updatebook})
 }
 const getRating =async function( req,res){
     let data=req.body
-    RatedBook=await bookModel.updateMany(       
-        {rating:{$gt:3.5}},
-                              {$inc:{price:10}},
+    
+    RatedBook=await bookModel.findOneAndUpdate(    
+        {rating:{$gt:3.5}}, 
+        {$inc:{price:10}},
                       
-                             {new:true}),{$set:data},{upsert:true}
+      {new:true}),{$set:data[i]},{upsert:true}
                             
-    res.send({data: RatedBook})
+res.send({data: RatedBook})
 }
 
 module.exports.createBook= createBook
