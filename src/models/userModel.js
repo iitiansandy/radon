@@ -9,11 +9,16 @@ const userSchema = new mongoose.Schema( {
         required: true
     },
     emailId: String,
+    password: String,
     gender: {
         type: String,
-        enum: ["male", "female", "LGBTQ"] //"falana" will give an error
+        enum: ["male", "female", "LGBTQ"] //"falana" will give an erro
     },
     age: Number,
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
     // isIndian: Boolean,
     // parentsInfo: {
     //     motherName: String,
