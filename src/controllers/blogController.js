@@ -10,14 +10,15 @@ const createBlog = async function (req, res) {
   try {
     let author_id = req.body.authorId
     let blog = req.body
-    if (isValidObjectId(author_id)) {
+    if (!blog.title)return res.status(400).send({msg:"title is required"})
+    if (!blog.body)return res.status(400).send({msg:"body is required"})
+    if (!category)return res.status(400).send({msg:"categoty is required"})
+    if (!isValidObjectId(author_id)) return res.status(404).send({msg:" author id is not valid"})
 
 
       let blogCreated = await blogModel.create(blog)
       return res.status(201).send({ data: blogCreated })
-    } else {
-      res.status(400).send({ msg: "it is  not a valid author_id" })
-    }
+    
 
 
   } catch (err) {
@@ -29,30 +30,39 @@ const createBlog = async function (req, res) {
 
 const getBlog = async function (req, res) {
 
-  try {
-   
-    data=req.query
+  try { 
+    let authorId = req.query.authorId
+    let category = req.query.category
+    let tags = req.query.tags
+    let subcategory = req.query.subcategory
 
-    let allData = await blogModel.find(data,{isDeleted: true},{isPublished: false})
-
-
-    if (allData) {
-
-      res.status(200).send({ msg: allData })
-    }
-    else {
-      res.status(404).send({ msg: "document not found" })
+    let blog = {
+        isDeleted: false,
+        isPublished: false
     }
 
+    if (authorId) {
+        blog.authorId = authorId
+    }
+    if (category) {
+        blog.category = category
+    }
+    if (tags) {
+        blog.tags = tags
+    }
+    if (subcategory) {
+        blog.subcategory = subcategory
+    }
 
-
-  } catch (err) {
-    console.log("This is the error:", err.message)
-    res.status(500).send({ msg: "Error", error: err.message })
-  }
-
+    let savedData = await blogModel.find(blog)
+    if (savedData.length == 0) {
+        return res.status(400).send({ status: false, msg: "No such Blogs Available" })
+    } else {
+        return res.status(200).send({ msg: savedData })
+    } }catch(err){
+        res.status(500).send({ msg: err.message })
+    }
 }
-
 
 const updatedBlog = async function (req, res) {
   try {
@@ -61,7 +71,7 @@ const updatedBlog = async function (req, res) {
 
     let blog = await blogModel.findById(blogId);
 
-    console.log(blog)
+    
     if (!blog) {
       return res.status(400).send("No such blog exists");
     }
@@ -69,8 +79,9 @@ const updatedBlog = async function (req, res) {
 
     let blogData = req.body;
     let date = new Date()
-    let updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { set: blogData, publishedAt: date }, { new: true });
-    res.status(400).send({ status: true, data: updatedBlog });
+    let updatedBlog = await blogModel.findOneAndUpdate({ _id: blog._id }, {$set: blogData, publishedAt: date }, { new: true });
+    if(!updatedBlog) return  res.status(404).send({msg:"not found"})
+    res.status(200).send({ status: true, data: updatedBlog });
 
 
 
@@ -92,14 +103,14 @@ const deletedBlog = async function (req, res) {
     let blog = await blogModel.findById(blogId);
 
 
-    if (blog) {
+    if (!blog) return res.status(404).send({msg:"not found"})
 
-      blogData = req.body
-      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blog._id }, blogData, { new: true });
+      // blogData = req.body
+      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId },  {$set: {
+        isDeleted: true, deletedAt: Date()
+      }}, { new: true });
       res.status(200).send({ status: true, data: deletedBlog });
-    } else {
-      return res.status(404).send("No such blog exists");
-    }
+    
 
 
   } catch (err) {
@@ -137,19 +148,17 @@ const deletebyquery = async function (req, res) {
 
     let data = await blogModel.updateMany(blog, {
       $set: {
-        isDeleted: true, deletedAt: Date()
+        isDeleted: false, deletedAt: Date()
       }
     }, { new: true });
-    if (data) {
+    if (!data) return res.status(400).send({msg:"updated data not found"})
 
 
       res.status(200).send({ status: true })
     }
-    else {
-      res.status(404).send({ msg: "document not found" })
-    }
+   
 
-  } catch (err) {
+   catch (err) {
     console.log("This is the error:", err.message)
     res.status(500).send({ msg: "Error", error: err.message })
   }

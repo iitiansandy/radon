@@ -2,21 +2,21 @@ const mongoose = require("mongoose");
 
 const authorSchema = new mongoose.Schema(
   {
-    fname: {type: String, require: true },
+    fname: {type: String, required: true },
 
-    lname: {type: String, require: true },
+    lname: {type: String, required: true },
 
-    title: { type: String, enum: ["Mr", "Mrs", "Miss"], require: true },
+    title: { type: String, enum: ["Mr", "Mrs", "Miss"], required: true },
 
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
-      match: /.+\@.+\..+/
+      match: /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
     },
 
     
-    password: { type: String, require: true },
+    password: { type: String, required: true },
   },
   { timestamps: true }
 );
