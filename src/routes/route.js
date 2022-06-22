@@ -11,7 +11,13 @@ router.get("/test-me", function (req, res) {
 
 router.post("/createAuthor", authorController.createAuthor  )
 
-// router.get("/getAuthorsData", authorController.getAuthorsData)
+router.get("/getBlog", blogController.getBlog)
+
+router.get("/getbyAuthor_id", blogController.getbyAuthor_id)
+router.get("/getbyCategory", blogController.getbyCategory)
+router.get("/getbyTag", blogController.getbyTag)
+router.get("/getbySubCat", blogController.getbySubCat)
+router.put("/updateBlog", blogController.updateBlog)
 
 router.post("/createBlog", blogController.createBlog )
 // router.post("/createPublisher", publishController.createPublisher  )
